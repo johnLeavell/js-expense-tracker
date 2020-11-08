@@ -33,14 +33,46 @@ function addTransactionDom(transaction) {
 
     item.innerHTML = `
         ${transaction.text} <span>${sign}${Math.abs(transaction.amount)}
-        </span> <button class='delete-btn'>x</button>
+        </span> <button class='delete-btn' onclick='removeTransaction(${transaction.id})'>x</button>
     `
 
     list.appendChild(item);
 }
 
+// add transaction
+function addTransaction(e) {
+    e.preventDefault();
+    
+    if(text.value.trim() === '' || amount.value.trim() === ''){
+        alert('Please add a text and amount')
+    } else {
+        const transaction = {
+            id: generateID(),
+            text: text.value,
+            amount: +amount.value
+        }
+        // console.log(transaction);
+        transactions.push(transaction);
 
+        addTransactionDom(transaction);
 
+        updateValues()
+        text.value = '';
+        amount.value = '';
+    }
+}
+
+//remove transaction by id
+function removeTransaction(id) {
+    transactions = transactions.filter(transaction => transaction.id !== id);
+
+    init()
+}
+
+// generate random ID
+function generateID(){
+    return Math.floor(Math.random() * 1000000000)
+}
 
 // update the balance, income and expense
 
@@ -80,6 +112,9 @@ function init(){
     transactions.forEach(addTransactionDom);
     updateValues()
 }
+
+//event listeners
+form.addEventListener('submit', addTransaction)
 
 //invoked functions
 init()
